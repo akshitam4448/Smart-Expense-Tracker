@@ -1,0 +1,243 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2>
+                    <i class="fas fa-wallet text-success"></i>
+                    Budget Planner
+                </h2>
+                <!-- Month/Year Navigation -->
+                <div class="d-flex align-items-center">
+                    <a href="{{ url_for('budget_planner', month=month-1, year=year) if month > 1 else url_for('budget_planner', month=12, year=year-1) }}"
+                       class="btn btn-outline-primary btn-sm me-2">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <span class="badge bg-primary p-2 mx-2" style="font-size: 1.1rem;">
+                        {{ month }}/{{ year }}
+                    </span>
+                    <a href="{{ url_for('budget_planner', month=month+1, year=year) if month < 12 else url_for('budget_planner', month=1, year=year+1) }}"
+                       class="btn btn-outline-primary btn-sm ms-2">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                    <a href="{{ url_for('budget_planner') }}" class="btn btn-outline-secondary btn-sm ms-2">
+                        <i class="fas fa-calendar-alt"></i> Today
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info Message -->
+    <div class="row mb-3">
+        <div class="col-12">
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle"></i>
+                <strong>Month: {{ month }}/{{ year }}</strong> |
+                Budgets Found: <strong>{{ budgets|length }}</strong> |
+                Total Budget: <strong>${{ "%.2f"|format(total_budget) }}</strong>
+                <a href="{{ url_for('add_budget', month=month, year=year) }}" class="btn btn-sm btn-success float-end">
+                    <i class="fas fa-plus-circle"></i> Add Budget for {{ month }}/{{ year }}
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-wallet"></i>
+                </div>
+                <div class="stat-content">
+                    <h6 style="color: rgba(255,255,255,0.8);">Total Budget</h6>
+                    <h3 style="color: white;">${{ "%.2f"|format(total_budget) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white;">
+                <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="stat-content">
+                    <h6 style="color: rgba(255,255,255,0.8);">Total Spent</h6>
+                    <h3 style="color: white;">${{ "%.2f"|format(total_spent) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-calculator"></i>
+                </div>
+                <div class="stat-content">
+                    <h6 style="color: rgba(255,255,255,0.8);">Remaining</h6>
+                    <h3 style="color: white;">${{ "%.2f"|format(total_budget - total_spent) }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{{ url_for('add_budget', month=month, year=year) }}" class="btn btn-success">
+                        <i class="fas fa-plus-circle"></i> Add Budget for {{ month }}/{{ year }}
+                    </a>
+                    <a href="{{ url_for('statistics') }}" class="btn btn-info ms-2">
+                        <i class="fas fa-chart-bar"></i> View Statistics
+                    </a>
+                    <a href="{{ url_for('budget_planner') }}" class="btn btn-secondary ms-2">
+                        <i class="fas fa-calendar-alt"></i> Current Month
+                    </a>
+                    <button onclick="location.reload()" class="btn btn-outline-secondary ms-2">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <div class="float-end">
+                        <span class="badge bg-primary p-2">Budget Status</span>
+                        <span class="badge bg-success p-2">On Track</span>
+                        <span class="badge bg-danger p-2">Over Budget</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Budget Status Table -->
+    {% if budget_status and budget_status|length > 0 %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #00d2a6 0%, #4ecdc4 100%); color: white;">
+                    <h5 style="color: white;">
+                        <i class="fas fa-list"></i> Budget Status for {{ month }}/{{ year }}
+                        <span class="badge bg-light text-dark ms-2">{{ budget_status|length }} Categories</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Budget</th>
+                                    <th>Actual</th>
+                                    <th>Remaining</th>
+                                    <th>Progress</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in budget_status %}
+                                <tr>
+                                    <td>
+                                        <span class="category-tag" style="background: linear-gradient(135deg, {{ get_color(item.category) }}, {{ get_color(item.category) }}dd);">
+                                            {{ item.category }}
+                                        </span>
+                                    </td>
+                                    <td>${{ "%.2f"|format(item.budget) }}</td>
+                                    <td>${{ "%.2f"|format(item.actual) }}</td>
+                                    <td>
+                                        {% if item.remaining >= 0 %}
+                                        <span style="color: #00d2a6; font-weight: bold;">${{ "%.2f"|format(item.remaining) }}</span>
+                                        {% else %}
+                                        <span style="color: #f5576c; font-weight: bold;">${{ "%.2f"|format(item.remaining) }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="progress" style="height: 20px; border-radius: 10px; width: 150px;">
+                                            <div class="progress-bar" role="progressbar"
+                                                 style="width: {{ item.percentage }}%;
+                                                        background: {% if item.is_over_budget %}linear-gradient(135deg, #f093fb 0%, #f5576c 100%){% else %}linear-gradient(135deg, #00d2a6 0%, #4ecdc4 100%){% endif %};
+                                                        border-radius: 10px; font-weight: bold;">
+                                                {{ "%.1f"|format(item.percentage) }}%
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if item.is_over_budget %}
+                                        <span class="badge bg-danger">Over Budget ⚠️</span>
+                                        {% else %}
+                                        <span class="badge bg-success">On Track ✅</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('edit_budget', budget_id=item.id) }}" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ url_for('delete_budget', budget_id=item.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this budget?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-primary">
+                                    <td><strong>Totals</strong></td>
+                                    <td><strong>${{ "%.2f"|format(total_budget) }}</strong></td>
+                                    <td><strong>${{ "%.2f"|format(total_spent) }}</strong></td>
+                                    <td><strong>${{ "%.2f"|format(total_budget - total_spent) }}</strong></td>
+                                    <td colspan="3"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- No Budgets Found -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-wallet fa-4x text-muted mb-3"></i>
+                    <h5>No Budgets Set for {{ month }}/{{ year }}</h5>
+                    <p class="text-muted">Create your first budget for {{ month }}/{{ year }} to start tracking your spending limits!</p>
+                    <a href="{{ url_for('add_budget', month=month, year=year) }}" class="btn btn-success">
+                        <i class="fas fa-plus-circle"></i> Create Budget for {{ month }}/{{ year }}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- All Budgets for this month -->
+    {% if budgets and budgets|length > 0 %}
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h5 style="color: white;">
+                        <i class="fas fa-database"></i> All Budgets for {{ month }}/{{ year }}
+                        <span class="badge bg-light text-dark ms-2">{{ budgets|length }}</span>
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        {% for budget in budgets %}
+                        <div class="col-md-3 col-sm-6 mb-2">
+                            <div class="category-badge" style="border-left: 5px solid {{ get_color(budget.category) }};">
+                                <span class="category-name">{{ budget.category }}</span>
+                                <span class="category-amount">${{ "%.2f"|format(budget.amount) }}</span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

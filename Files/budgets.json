@@ -1,0 +1,50 @@
+[
+    {
+        "id": "6e6f20a3",
+        "category": "Bills",
+        "amount": 5000.0,
+        "month": 1,
+        "year": 2026,
+        "created_at": "2026-07-12 15:19:03"
+    },
+    {
+        "id": "03dfebf0",
+        "category": "Transport",
+        "amount": 30000.0,
+        "month": 12,
+        "year": 3,
+        "created_at": "2026-07-12 15:20:33"
+    },
+    {
+        "id": "b81c2fd0",
+        "category": "Shopping",
+        "amount": 40000.0,
+        "month": 6,
+        "year": 23,
+        "created_at": "2026-07-12 15:20:54"
+    },
+    {
+        "id": "b43c1258",
+        "category": "Food",
+        "amount": 30000.0,
+        "month": 7,
+        "year": 5,
+        "created_at": "2026-07-12 15:21:30"
+    },
+    {
+        "id": "106a3257",
+        "category": "Transport",
+        "amount": 2000.0,
+        "month": 1,
+        "year": 2028,
+        "created_at": "2026-07-12 15:27:27"
+    },
+    {
+        "id": "e8d1a19a",
+        "category": "Shopping",
+        "amount": 3000.0,
+        "month": 7,
+        "year": 2026,
+        "created_at": "2026-07-12 15:36:37"
+    }
+]

@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                    <h4 class="mb-0" style="color: white;">
+                        <i class="fas fa-edit"></i> Edit Budget
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('edit_budget', budget_id=budget.id) }}">
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">
+                                <i class="fas fa-tag"></i> Category
+                            </label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="Food" {% if budget.category == 'Food' %}selected{% endif %}>🍔 Food</option>
+                                <option value="Transport" {% if budget.category == 'Transport' %}selected{% endif %}>🚗 Transport</option>
+                                <option value="Shopping" {% if budget.category == 'Shopping' %}selected{% endif %}>🛍️ Shopping</option>
+                                <option value="Bills" {% if budget.category == 'Bills' %}selected{% endif %}>📄 Bills</option>
+                                <option value="Entertainment" {% if budget.category == 'Entertainment' %}selected{% endif %}>🎬 Entertainment</option>
+                                <option value="Healthcare" {% if budget.category == 'Healthcare' %}selected{% endif %}>🏥 Healthcare</option>
+                                <option value="Education" {% if budget.category == 'Education' %}selected{% endif %}>📚 Education</option>
+                                <option value="Other" {% if budget.category == 'Other' %}selected{% endif %}>📌 Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Budget Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">
+                                <i class="fas fa-dollar-sign"></i> Budget Amount ($)
+                            </label>
+                            <input type="number"
+                                   step="0.01"
+                                   class="form-control"
+                                   id="amount"
+                                   name="amount"
+                                   value="{{ budget.amount }}"
+                                   min="0.01"
+                                   required>
+                        </div>
+
+                        <!-- Month/Year Info -->
+                        <div class="mb-3 alert alert-info">
+                            <i class="fas fa-calendar-alt"></i>
+                            Budget for: <strong>{{ budget.month }}/{{ budget.year }}</strong>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('budget_planner', month=budget.month, year=budget.year) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Budget
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

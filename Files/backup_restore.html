@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4>
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            Backup & Restore Management
+                        </h4>
+                        <a href="{{ url_for('create_backup') }}" class="btn btn-success">
+                            <i class="fas fa-plus-circle"></i> Create New Backup
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if backups %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Filename</th>
+                                    <th>Size</th>
+                                    <th>Created</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for backup in backups %}
+                                <tr>
+                                    <td><i class="fas fa-file-archive"></i> {{ backup.filename }}</td>
+                                    <td>{{ (backup.size / 1024)|round(1) }} KB</td>
+                                    <td>{{ backup.created }}</td>
+                                    <td>
+                                        <a href="{{ url_for('restore_backup', filename=backup.filename) }}"
+                                           class="btn btn-sm btn-warning"
+                                           onclick="return confirm('⚠️ This will replace ALL current data with the backup. Are you sure?')">
+                                            <i class="fas fa-undo"></i> Restore
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-info mt-3">
+                        <i class="fas fa-info-circle"></i>
+                        <strong>Note:</strong> Only the 30 most recent backups are kept. Backups are created automatically when changes are made.
+                    </div>
+                    {% else %}
+                    <div class="text-center py-5">
+                        <i class="fas fa-cloud-upload-alt fa-4x text-muted mb-3"></i>
+                        <h5>No Backups Found</h5>
+                        <p class="text-muted">Create your first backup by clicking the button above.</p>
+                        <a href="{{ url_for('create_backup') }}" class="btn btn-primary">
+                            <i class="fas fa-plus-circle"></i> Create First Backup
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="card mt-3 bg-light">
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Backup Tips</h6>
+                    <ul class="mb-0">
+                        <li>Backups are automatically created when you add, edit, or delete expenses</li>
+                        <li>You can manually create a backup at any time</li>
+                        <li>Restoring a backup will replace all current data</li>
+                        <li>Old backups are automatically cleaned up (keeps last 30)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

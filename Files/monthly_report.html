@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>
+                        <i class="fas fa-calendar-alt text-primary"></i>
+                        Monthly Report - {{ month }}/{{ year }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="stat-card total-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Total Spent</h6>
+                                    <h3>${{ "%.2f"|format(monthly.total) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card expenses-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-receipt"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Transactions</h6>
+                                    <h3>{{ monthly.count }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="stat-card average-card">
+                                <div class="stat-icon">
+                                    <i class="fas fa-calculator"></i>
+                                </div>
+                                <div class="stat-content">
+                                    <h6>Average</h6>
+                                    <h3>${{ "%.2f"|format(monthly.total/monthly.count if monthly.count > 0 else 0) }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if monthly.categories %}
+                    <h5 class="mt-4"><i class="fas fa-chart-pie"></i> Category Breakdown</h5>
+                    <div class="row">
+                        {% for category, data in monthly.categories.items() %}
+                        <div class="col-md-4 mb-2">
+                            <div class="category-badge" style="border-left-color: {{ category_colors.get(category, '#636E72') }}">
+                                <span class="category-name">
+                                    <span class="badge" style="background: {{ category_colors.get(category, '#636E72') }}; width: 12px; height: 12px; display: inline-block; border-radius: 50%;"></span>
+                                    {{ category }}
+                                </span>
+                                <span>
+                                    <span class="category-amount">${{ "%.2f"|format(data.amount) }}</span>
+                                    <small class="text-muted">({{ data.count }})</small>
+                                </span>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <a href="{{ url_for('statistics') }}" class="btn btn-primary mt-3">
+                        <i class="fas fa-arrow-left"></i> Back to Statistics
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

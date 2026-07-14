@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #00d2a6 0%, #4ecdc4 100%); color: white;">
+                    <h4 class="mb-0" style="color: white;">
+                        <i class="fas fa-plus-circle"></i> Add Budget for {{ month }}/{{ year }}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_budget') }}">
+                        <!-- Category -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">
+                                <i class="fas fa-tag"></i> Category
+                            </label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select a category...</option>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Bills">📄 Bills</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Healthcare">🏥 Healthcare</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Other">📌 Other</option>
+                            </select>
+                            <div class="form-text">Choose the category you want to budget for</div>
+                        </div>
+
+                        <!-- Budget Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">
+                                <i class="fas fa-dollar-sign"></i> Budget Amount ($)
+                            </label>
+                            <input type="number"
+                                   step="0.01"
+                                   class="form-control"
+                                   id="amount"
+                                   name="amount"
+                                   placeholder="Enter budget amount"
+                                   min="0.01"
+                                   required>
+                            <div class="form-text">Set your monthly spending limit for this category</div>
+                        </div>
+
+                        <!-- Month -->
+                        <div class="mb-3">
+                            <label for="month" class="form-label">
+                                <i class="fas fa-calendar-alt"></i> Month
+                            </label>
+                            <select class="form-select" id="month" name="month" required>
+                                {% for m in range(1, 13) %}
+                                <option value="{{ m }}" {% if m == month %}selected{% endif %}>
+                                    {{ m }} -
+                                    {% if m == 1 %}January{% elif m == 2 %}February{% elif m == 3 %}March{% elif m == 4 %}April{% elif m == 5 %}May{% elif m == 6 %}June{% elif m == 7 %}July{% elif m == 8 %}August{% elif m == 9 %}September{% elif m == 10 %}October{% elif m == 11 %}November{% else %}December{% endif %}
+                                </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Year -->
+                        <div class="mb-3">
+                            <label for="year" class="form-label">
+                                <i class="fas fa-calendar"></i> Year
+                            </label>
+                            <input type="number" class="form-control" id="year" name="year" value="{{ year }}" min="2020" max="2030" required>
+                            <div class="form-text">Enter the year for this budget (e.g., 2024, 2025)</div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('budget_planner', month=month, year=year) }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Add Budget for {{ month }}/{{ year }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="card mt-3 bg-light">
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Budget Tips</h6>
+                    <ul class="mb-0">
+                        <li>Set realistic budgets based on your spending habits</li>
+                        <li>Review your budget monthly to stay on track</li>
+                        <li>Adjust budgets if you consistently over or under spend</li>
+                        <li>Use budgets to identify areas where you can save money</li>
+                        <li>You can set different budgets for different months</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

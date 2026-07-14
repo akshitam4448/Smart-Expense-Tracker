@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #00d2a6 0%, #4ecdc4 100%); color: white;">
+                    <h4 class="mb-0" style="color: white;">
+                        <i class="fas fa-plus-circle"></i> Add Income
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_income') }}">
+                        <!-- Source -->
+                        <div class="mb-3">
+                            <label for="source" class="form-label">
+                                <i class="fas fa-building"></i> Income Source
+                            </label>
+                            <input type="text" class="form-control" id="source" name="source"
+                                   placeholder="e.g., Salary, Freelance, Business" required>
+                            <div class="form-text">Where did this income come from?</div>
+                        </div>
+
+                        <!-- Amount -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">
+                                <i class="fas fa-dollar-sign"></i> Amount ($)
+                            </label>
+                            <input type="number" step="0.01" class="form-control" id="amount" name="amount"
+                                   placeholder="Enter amount" min="0.01" required>
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-pencil-alt"></i> Description (Optional)
+                            </label>
+                            <input type="text" class="form-control" id="description" name="description"
+                                   placeholder="Brief description">
+                        </div>
+
+                        <!-- Date -->
+                        <div class="mb-3">
+                            <label for="date" class="form-label">
+                                <i class="fas fa-calendar-alt"></i> Date
+                            </label>
+                            <input type="date" class="form-control" id="date" name="date">
+                            <div class="form-text">Leave empty for today's date</div>
+                        </div>
+
+                        <!-- Recurring Income -->
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="is_recurring" name="is_recurring">
+                                <label class="form-check-label" for="is_recurring">
+                                    <i class="fas fa-sync-alt"></i> Recurring Income
+                                </label>
+                            </div>
+                            <div class="form-text">Check if this income is recurring (monthly, weekly, etc.)</div>
+                        </div>
+
+                        <!-- Frequency -->
+                        <div class="mb-3" id="frequencyDiv" style="display: none;">
+                            <label for="frequency" class="form-label">
+                                <i class="fas fa-clock"></i> Frequency
+                            </label>
+                            <select class="form-select" id="frequency" name="frequency">
+                                <option value="Weekly">Weekly</option>
+                                <option value="Monthly" selected>Monthly</option>
+                                <option value="Quarterly">Quarterly</option>
+                                <option value="Yearly">Yearly</option>
+                            </select>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('income_manager') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Add Income
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Tips -->
+            <div class="card mt-3 bg-light">
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Income Tips</h6>
+                    <ul class="mb-0">
+                        <li>Track all sources of income for accurate financial picture</li>
+                        <li>Mark recurring income for better forecasting</li>
+                        <li>Review your income sources regularly</li>
+                        <li>Use income data to plan your budget effectively</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.getElementById('is_recurring').addEventListener('change', function() {
+    document.getElementById('frequencyDiv').style.display = this.checked ? 'block' : 'none';
+});
+</script>
+{% endblock %}

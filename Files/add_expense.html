@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        <i class="fas fa-plus-circle text-success"></i>
+                        Add New Expense
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_expense') }}">
+                        <!-- Amount Field -->
+                        <div class="mb-3">
+                            <label for="amount" class="form-label">
+                                <i class="fas fa-dollar-sign"></i> Amount ($)
+                            </label>
+                            <input type="number"
+                                   step="0.01"
+                                   class="form-control"
+                                   id="amount"
+                                   name="amount"
+                                   placeholder="Enter amount (e.g., 25.50)"
+                                   min="0.01"
+                                   required>
+                            <div class="form-text">Enter the expense amount in dollars</div>
+                        </div>
+
+                        <!-- Category Selection -->
+                        <div class="mb-3">
+                            <label for="category" class="form-label">
+                                <i class="fas fa-tag"></i> Category
+                            </label>
+                            <select class="form-select" id="category" name="category" required>
+                                <option value="">Select a category...</option>
+                                <option value="Food">🍔 Food</option>
+                                <option value="Transport">🚗 Transport</option>
+                                <option value="Shopping">🛍️ Shopping</option>
+                                <option value="Bills">📄 Bills</option>
+                                <option value="Entertainment">🎬 Entertainment</option>
+                                <option value="Healthcare">🏥 Healthcare</option>
+                                <option value="Education">📚 Education</option>
+                                <option value="Other">📌 Other</option>
+                            </select>
+                            <div class="form-text">Choose the category that best fits your expense</div>
+                        </div>
+
+                        <!-- Description Field -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label">
+                                <i class="fas fa-pencil-alt"></i> Description
+                            </label>
+                            <input type="text"
+                                   class="form-control"
+                                   id="description"
+                                   name="description"
+                                   placeholder="What did you spend on?"
+                                   required>
+                            <div class="form-text">Brief description of the expense</div>
+                        </div>
+
+                        <!-- Date Field -->
+                        <div class="mb-3">
+                            <label for="date" class="form-label">
+                                <i class="fas fa-calendar-alt"></i> Date
+                            </label>
+                            <input type="date"
+                                   class="form-control"
+                                   id="date"
+                                   name="date">
+                            <div class="form-text">Leave empty for today's date</div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="fas fa-save"></i> Add Expense
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Quick Tips -->
+            <div class="card mt-3 bg-light">
+                <div class="card-body">
+                    <h6><i class="fas fa-lightbulb text-warning"></i> Quick Tips</h6>
+                    <ul class="mb-0">
+                        <li>Be honest about your spending to track accurately</li>
+                        <li>Categorize expenses correctly for better insights</li>
+                        <li>Add expenses daily to avoid forgetting</li>
+                        <li>Review your spending weekly to stay on budget</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

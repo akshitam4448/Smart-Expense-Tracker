@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-money-bill-wave text-success"></i>
+                Income Manager
+                <span class="badge bg-success">Total: ${{ "%.2f"|format(total_income) }}</span>
+            </h2>
+        </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #00d2a6 0%, #4ecdc4 100%); color: white;">
+                <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-money-bill-wave"></i>
+                </div>
+                <div class="stat-content">
+                    <h6 style="color: rgba(255,255,255,0.8);">Total Income</h6>
+                    <h3 style="color: white;">${{ "%.2f"|format(total_income) }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white;">
+                <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-receipt"></i>
+                </div>
+                <div class="stat-content">
+                    <h6 style="color: rgba(255,255,255,0.8);">Income Sources</h6>
+                    <h3 style="color: white;">{{ income_by_source|length }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white;">
+                <div class="stat-icon" style="background: rgba(255,255,255,0.2); color: white;">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="stat-content">
+                    <h6 style="color: rgba(255,255,255,0.8);">This Month</h6>
+                    <h3 style="color: white;">${{ "%.2f"|format(monthly_income.total) }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <a href="{{ url_for('add_income') }}" class="btn btn-success">
+                        <i class="fas fa-plus-circle"></i> Add Income
+                    </a>
+                    <a href="{{ url_for('statistics') }}" class="btn btn-info ms-2">
+                        <i class="fas fa-chart-bar"></i> View Statistics
+                    </a>
+                    <span class="badge bg-success p-2 float-end">Income Sources: {{ income_by_source|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Income Table -->
+    {% if incomes %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header" style="background: linear-gradient(135deg, #00d2a6 0%, #4ecdc4 100%); color: white;">
+                    <h5 style="color: white;"><i class="fas fa-list"></i> All Income Records</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Source</th>
+                                    <th>Description</th>
+                                    <th>Amount</th>
+                                    <th>Recurring</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for income in incomes|sort(attribute='date', reverse=True) %}
+                                <tr>
+                                    <td>{{ income.date }}</td>
+                                    <td>
+                                        <span class="category-tag" style="background: linear-gradient(135deg, #00d2a6 0%, #4ecdc4 100%);">
+                                            {{ income.source }}
+                                        </span>
+                                    </td>
+                                    <td>{{ income.description or '-' }}</td>
+                                    <td class="fw-bold text-success">${{ "%.2f"|format(income.amount) }}</td>
+                                    <td>
+                                        {% if income.is_recurring %}
+                                        <span class="badge bg-info">{{ income.frequency }}</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">One-time</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <a href="{{ url_for('edit_income', income_id=income.id) }}" class="btn btn-sm btn-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="{{ url_for('delete_income', income_id=income.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this income?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                            <tfoot>
+                                <tr class="table-success">
+                                    <td colspan="3" class="fw-bold text-end">Total:</td>
+                                    <td class="fw-bold">${{ "%.2f"|format(total_income) }}</td>
+                                    <td colspan="2"></td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <i class="fas fa-money-bill-wave fa-4x text-muted mb-3"></i>
+        <h5>No Income Records</h5>
+        <p class="text-muted">Add your first income source to start tracking!</p>
+        <a href="{{ url_for('add_income') }}" class="btn btn-success">
+            <i class="fas fa-plus-circle"></i> Add Income
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
